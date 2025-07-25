@@ -18,7 +18,7 @@ body, html {
 /* Sidebar */
 .sidebar {
   width: 250px;
-  background: #2d3436;
+  background: #125838;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -62,7 +62,7 @@ body, html {
 
 .menu li:hover,
 .menu li.active {
-  background: #636e72;
+  background: #3e916c;
 }
 
 .menu li i {
@@ -119,14 +119,21 @@ body, html {
 }
 
 .dashboard-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px;
+  background: linear-gradient(135deg, #ffffff, #f0f0f0);
+  border-radius: 16px;
+  padding: 25px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  gap: 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.dashboard-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
 
 .dashboard-card .icon {
   font-size: 36px;
@@ -141,4 +148,86 @@ body, html {
   margin: 0;
   font-size: 14px;
   color: #888;
+}
+
+.dashboard-card .icon {
+  font-size: 40px;
+  color: #0e4c35; /* matches your sidebar green */
+  background: #e1f7ef;
+  padding: 12px;
+  border-radius: 12px;
+}
+.dashboard-card .details h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.dashboard-card .details p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #636e72;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Exactly 4 cards per row */
+  gap: 20px;
+}
+.dashboard-card {
+  color: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+.dashboard-card .icon {
+  font-size: 36px;
+}
+
+.dashboard-card .details h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.dashboard-card .details p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Gradient backgrounds */
+.users {
+  background: linear-gradient(to right, #0e4c35, #167f5b);
+}
+
+.orders {
+  background: linear-gradient(to right, #ff6b6b, #ff9472);
+}
+
+.quotations {
+  background: linear-gradient(to right, #3b82f6, #60a5fa);
+}
+
+.pending {
+  background: linear-gradient(to right, #f6d365, #fda085);
+}
+
+.confirmed {
+  background: linear-gradient(to right, #00b894, #55efc4);
+}
+
+.shipped {
+  background: linear-gradient(to right, #0984e3, #74b9ff);
+}
+
+.delivered {
+  background: linear-gradient(to right, #6c5ce7, #a29bfe);
 }

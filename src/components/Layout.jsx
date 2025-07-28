@@ -21,7 +21,7 @@ const navigate = useNavigate();
         <div className="dashboard">
             <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
                 <div className="sidebar-header">
-                    <h2>{collapsed ? "A" : "AdminLTE"}</h2>
+                    <h2>{collapsed ? "A" : "Admin"}</h2>
                     <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
                         <i className={`bi ${collapsed ? "bi-chevron-double-right" : "bi-chevron-double-left"}`}></i>
                     </button>

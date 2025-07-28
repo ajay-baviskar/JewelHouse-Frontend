@@ -1,0 +1,45 @@
+.quotation-page {
+  padding: 20px;
+  background: #f9f9f9;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.quotation-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.quotation-table th,
+.quotation-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.quotation-table th {
+  background-color: #0e4c35;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.quotation-thumbnail {
+  height: 60px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+.quotation-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}

@@ -6,6 +6,7 @@ import Pagination from "../../components/Pagination";
 import { fetchDiamonds, updateDiamond } from "../../services/diamond";
 import "../../styles/diamond.css";
 import "../../styles/editModal.css"; // NEW CSS file
+import "../../styles/loader.css"; // Loader styles
 
 const DiamondList = () => {
   const [filters, setFilters] = useState({});
@@ -13,9 +14,11 @@ const DiamondList = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
   const [total, setTotal] = useState(0);
-  const [editingDiamond, setEditingDiamond] = useState(null); // Editing state
+  const [editingDiamond, setEditingDiamond] = useState(null);
+  const [loading, setLoading] = useState(false); // Loader state
 
   const loadDiamonds = async () => {
+    setLoading(true); // Start loader
     try {
       const res = await fetchDiamonds({ ...filters, page, limit });
       setDiamonds(res.data.data);
@@ -23,6 +26,7 @@ const DiamondList = () => {
     } catch (err) {
       console.error("Fetch error:", err);
     }
+    setLoading(false); // End loader
   };
 
   const handleEdit = (diamond) => {
@@ -30,9 +34,13 @@ const DiamondList = () => {
   };
 
   const handleUpdate = async (updatedData) => {
+    const confirm = window.confirm("Are you sure you want to update the diamond?");
+    if (!confirm) return;
+    setLoading(true); // Start loader for update
     await updateDiamond(updatedData._id, updatedData);
     setEditingDiamond(null);
-    loadDiamonds(); // Refresh list
+    await loadDiamonds(); // Refresh list
+    setLoading(false); // End loader
   };
 
   useEffect(() => {
@@ -45,12 +53,23 @@ const DiamondList = () => {
         <h1 className="page-title">💎 Diamond List</h1>
         <DiamondFilter filters={filters} setFilters={setFilters} />
 
-        <DiamondTable diamonds={diamonds} onEdit={handleEdit} />
-
-        <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
+        {loading ? (
+          <div className="loader-container">
+            <div className="spinner"></div>
+          </div>
+        ) : (
+          <>
+            <DiamondTable diamonds={diamonds} onEdit={handleEdit} />
+            <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
+          </>
+        )}
 
         {editingDiamond && (
-          <EditModal diamond={editingDiamond} onUpdate={handleUpdate} onClose={() => setEditingDiamond(null)} />
+          <EditModal
+            diamond={editingDiamond}
+            onUpdate={handleUpdate}
+            onClose={() => setEditingDiamond(null)}
+          />
         )}
       </div>
     </Layout>
@@ -94,8 +113,12 @@ const EditModal = ({ diamond, onUpdate, onClose }) => {
         <input name="Price" value={formData.Price} onChange={handleChange} />
 
         <div className="modal-actions">
-          <button className="btn-update" onClick={handleSubmit}>Update</button>
-          <button className="btn-cancel" onClick={onClose}>Cancel</button>
+          <button className="btn-update" onClick={handleSubmit}>
+            Update
+          </button>
+          <button className="btn-cancel" onClick={onClose}>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

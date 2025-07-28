@@ -33,7 +33,7 @@ const Login = () => {
         setMessageType("success");
         localStorage.setItem("token", data.token); // store token
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/dashboard/home");
         }, 1000);
       } else {
         setMessage(data.message || "❌ Invalid credentials.");

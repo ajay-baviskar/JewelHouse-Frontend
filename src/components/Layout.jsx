@@ -12,9 +12,9 @@ const navigate = useNavigate();
     { label: "Home", icon: "bi-house-door-fill", path: "/dashboard/home" },
     { label: "Users", icon: "bi-people-fill", path: "/dashboard/users" },
     { label: "Diamond", icon: "bi-gem", path: "/dashboard/diamonds" },
-    { label: "Orders", icon: "bi-cart-fill", path: "/dashboard/orders" },
     { label: "Quotations", icon: "bi-file-earmark-text-fill", path: "/dashboard/quotations" },
-    { label: "Settings", icon: "bi-gear-fill", path: "/dashboard/settings" },
+    { label: "Orders", icon: "bi-cart-fill", path: "/dashboard/orders" },
+    // { label: "Settings", icon: "bi-gear-fill", path: "/dashboard/settings" },
   ];
 
     return (

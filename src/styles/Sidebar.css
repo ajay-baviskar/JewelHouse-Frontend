@@ -1,0 +1,25 @@
+/* Sidebar.css */
+.sidebar-item a {
+  text-decoration: none; /* Remove underline */
+  color: #333; /* Default text color */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-item a:hover {
+  background-color: #f3f4f6; /* Light gray on hover */
+  color: #111;
+}
+
+.sidebar-item.active a {
+  background-color: #2563eb; /* Blue for active */
+  color: white;
+}
+
+.sidebar-item.active a i {
+  color: white;
+}

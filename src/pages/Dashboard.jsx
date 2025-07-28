@@ -1,18 +1,22 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom"; // ✅ Add for navigation
 import "../styles/Dashboard.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [activeMenu, setActiveMenu] = useState("Home");
   const [summary, setSummary] = useState(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const menuItems = [
-    { label: "Home", icon: "bi-house-door-fill" },
-    { label: "Users", icon: "bi-people-fill" },
-    { label: "Orders", icon: "bi-cart-fill" },
-    { label: "Quotations", icon: "bi-file-earmark-text-fill" },
-    { label: "Settings", icon: "bi-gear-fill" },
+    { label: "Home", icon: "bi-house-door-fill", path: "/dashboard/home" },
+    { label: "Users", icon: "bi-people-fill", path: "/dashboard/users" },
+    { label: "Diamond", icon: "bi-gem", path: "/dashboard/diamonds" },
+    { label: "Orders", icon: "bi-cart-fill", path: "/dashboard/orders" },
+    { label: "Quotations", icon: "bi-file-earmark-text-fill", path: "/dashboard/quotations" },
+    { label: "Settings", icon: "bi-gear-fill", path: "/dashboard/settings" },
   ];
 
   useEffect(() => {
@@ -31,6 +35,11 @@ const Dashboard = () => {
     fetchSummary();
   }, []);
 
+  const getCurrentMenu = () => {
+    const current = menuItems.find((item) => location.pathname.includes(item.path));
+    return current ? current.label : "Home";
+  };
+
   return (
     <div className="dashboard">
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
@@ -45,13 +54,14 @@ const Dashboard = () => {
           {menuItems.map((item) => (
             <li
               key={item.label}
-              className={activeMenu === item.label ? "active" : ""}
-              onClick={() => setActiveMenu(item.label)}
+              className={`menu-item ${location.pathname.includes(item.path) ? "active" : ""}`}
+              onClick={() => navigate(item.path)}
             >
               <i className={`bi ${item.icon}`}></i>
               {!collapsed && <span className="text">{item.label}</span>}
             </li>
           ))}
+
           <li
             className="logout"
             onClick={() => {
@@ -67,20 +77,19 @@ const Dashboard = () => {
 
       <main className="main-content">
         <div className="dashboard-header">
-          <h1>{activeMenu}</h1>
+          <h1>{getCurrentMenu()}</h1>
           <i className="bi bi-gear-fill"></i>
         </div>
 
         <p>
-          Welcome to the <strong>{activeMenu}</strong> section.
+          Welcome to the <strong>{getCurrentMenu()}</strong> section.
         </p>
 
-        {activeMenu === "Home" && summary && (
+        {/* Dashboard content for Home only */}
+        {location.pathname === "/dashboard/home" && summary && (
           <div className="card-grid">
             <div className="dashboard-card users">
-              <div className="icon">
-                <i className="bi bi-people-fill"></i>
-              </div>
+              <div className="icon"><i className="bi bi-people-fill"></i></div>
               <div className="details">
                 <h3>{summary.totalUsers}</h3>
                 <p>Total Users</p>
@@ -88,9 +97,7 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-card orders">
-              <div className="icon">
-                <i className="bi bi-cart-fill"></i>
-              </div>
+              <div className="icon"><i className="bi bi-cart-fill"></i></div>
               <div className="details">
                 <h3>{summary.totalOrders}</h3>
                 <p>Total Orders</p>
@@ -98,9 +105,7 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-card quotations">
-              <div className="icon">
-                <i className="bi bi-file-earmark-text-fill"></i>
-              </div>
+              <div className="icon"><i className="bi bi-file-earmark-text-fill"></i></div>
               <div className="details">
                 <h3>{summary.totalQuotations}</h3>
                 <p>Total Quotations</p>
@@ -108,9 +113,7 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-card pending">
-              <div className="icon">
-                <i className="bi bi-hourglass-split"></i>
-              </div>
+              <div className="icon"><i className="bi bi-hourglass-split"></i></div>
               <div className="details">
                 <h3>{summary.orderStatusCounts.pending}</h3>
                 <p>Pending Orders</p>
@@ -118,9 +121,7 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-card confirmed">
-              <div className="icon">
-                <i className="bi bi-patch-check-fill"></i>
-              </div>
+              <div className="icon"><i className="bi bi-patch-check-fill"></i></div>
               <div className="details">
                 <h3>{summary.orderStatusCounts.confirmed}</h3>
                 <p>Confirmed Orders</p>
@@ -128,9 +129,7 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-card shipped">
-              <div className="icon">
-                <i className="bi bi-truck"></i>
-              </div>
+              <div className="icon"><i className="bi bi-truck"></i></div>
               <div className="details">
                 <h3>{summary.orderStatusCounts.shipped}</h3>
                 <p>Shipped Orders</p>
@@ -138,16 +137,13 @@ const Dashboard = () => {
             </div>
 
             <div className="dashboard-card delivered">
-              <div className="icon">
-                <i className="bi bi-box-seam"></i>
-              </div>
+              <div className="icon"><i className="bi bi-box-seam"></i></div>
               <div className="details">
                 <h3>{summary.orderStatusCounts.delivered}</h3>
                 <p>Delivered Orders</p>
               </div>
             </div>
           </div>
-
         )}
       </main>
     </div>

@@ -82,8 +82,12 @@ const QuotationsPage = () => {
 
                         </table>
 
-                        <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
-                    </>
+                        <Pagination
+                            page={page}
+                            total={total}
+                            limit={limit}
+                            onPageChange={setPage}
+                        />                    </>
                 )}
             </div>
         </Layout>

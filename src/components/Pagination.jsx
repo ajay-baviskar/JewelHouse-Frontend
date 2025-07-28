@@ -23,7 +23,6 @@ const Pagination = ({ page, total, limit, onPageChange }) => {
       >
         Previous
       </button>
-            <span>Page {page}</span>
 
       {visiblePages.map(p => (
         <button

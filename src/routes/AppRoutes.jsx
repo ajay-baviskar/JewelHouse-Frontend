@@ -19,8 +19,8 @@ const AppRoutes = () => {
         <Route path="/dashboard/home" element={<Dashboard />} />
         <Route path="/dashboard/diamonds" element={<DiamondList />} />
         <Route path="/dashboard/orders" element={<OrderList />} />
-                <Route path="/dashboard/quotations" element={<QuotationList />} />
-                                <Route path="/dashboard/users" element={<UserList />} />
+        <Route path="/dashboard/quotations" element={<QuotationList />} />
+        <Route path="/dashboard/users" element={<UserList />} />
 
 
 

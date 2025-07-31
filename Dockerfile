@@ -1,5 +1,5 @@
 # Use full Node.js image instead of Alpine
-FROM node:20
+FROM node:18
 
 WORKDIR /app
 

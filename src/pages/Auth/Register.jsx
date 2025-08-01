@@ -1,13 +1,16 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom"; // ⬅️ Add Link and useNavigate
 import "../../styles/Auth.css";
 import Input from "../../components/Input";
 
 const Register = () => {
+  const navigate = useNavigate(); // ⬅️ For redirecting
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     mobile: "",
     password: "",
+    role: "MOBILE", // Default role
   });
 
   const [message, setMessage] = useState("");
@@ -28,9 +31,20 @@ const Register = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage("✅ Registration successful!");
+        setMessage("✅ Registration successful! Redirecting to login...");
         setMessageType("success");
-        setFormData({ name: "", email: "", mobile: "", password: "" });
+        setFormData({
+          name: "",
+          email: "",
+          mobile: "",
+          password: "",
+          role: "MOBILE",
+        });
+
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       } else {
         setMessage(data.message || "❌ Registration failed. Try again.");
         setMessageType("error");
@@ -41,7 +55,7 @@ const Register = () => {
       setMessageType("error");
     }
 
-    // Auto-clear message after 5 seconds
+    // Clear message after 5 seconds
     setTimeout(() => {
       setMessage("");
       setMessageType("");
@@ -54,9 +68,7 @@ const Register = () => {
         <h2>Register</h2>
 
         {message && (
-          <div className={`form-message ${messageType}`}>
-            {message}
-          </div>
+          <div className={`form-message ${messageType}`}>{message}</div>
         )}
 
         <Input label="Name" name="name" value={formData.name} onChange={handleChange} />
@@ -69,7 +81,30 @@ const Register = () => {
           value={formData.password}
           onChange={handleChange}
         />
+
+        {/* Role Dropdown */}
+        <div className="form-group">
+          <label htmlFor="role">Role</label>
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="input-field"
+          >
+            <option value="MOBILE">MOBILE</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+
         <button type="submit" className="submit-btn">Register</button>
+
+        {/* ✅ Login Link */}
+        <p style={{ marginTop: "12px", textAlign: "center" }}>
+          Already have an account?{" "}
+          <Link to="/login" style={{ color: "#007bff", textDecoration: "underline" }}>
+            Login here
+          </Link>
+        </p>
       </form>
     </div>
   );

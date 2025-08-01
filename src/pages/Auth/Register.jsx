@@ -10,7 +10,7 @@ const Register = () => {
     email: "",
     mobile: "",
     password: "",
-    role: "MOBILE", // Default role
+    role: "ADMIN", // Default role
   });
 
   const [message, setMessage] = useState("");
@@ -83,7 +83,7 @@ const Register = () => {
         />
 
         {/* Role Dropdown */}
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="role">Role</label>
           <select
             name="role"
@@ -94,7 +94,7 @@ const Register = () => {
             <option value="MOBILE">MOBILE</option>
             <option value="ADMIN">ADMIN</option>
           </select>
-        </div>
+        </div> */}
 
         <button type="submit" className="submit-btn">Register</button>
 

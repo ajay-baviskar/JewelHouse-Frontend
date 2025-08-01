@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 9089
+EXPOSE 5173
 
 ENV HOST=0.0.0.0
 

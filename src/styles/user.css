@@ -35,3 +35,23 @@
   background-color: #f0f8ff;
   transition: background 0.3s ease;
 }
+
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.register-btn {
+  background-color: #0e4c35;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.register-btn:hover {
+  background-color: #0c3a29;
+}

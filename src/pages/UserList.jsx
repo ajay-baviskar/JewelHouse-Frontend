@@ -6,6 +6,7 @@ import Pagination from "../components/Pagination";
 import { fetchUsers } from "../services/user";
 import "../styles/user.css";
 import "../styles/loader.css";
+import RegisterModal from "../components/RegisterModal";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -13,6 +14,7 @@ const UserList = () => {
   const limit = 10;
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -33,8 +35,11 @@ const UserList = () => {
   return (
     <Layout>
       <div className="user-page">
-        <h1 className="page-title">👥 User List
-        </h1>
+        <div className="page-header">
+          <h1 className="page-title">👥 User List</h1>
+          <button className="register-btn" onClick={() => setShowModal(true)}>+ Register User</button>
+        </div>
+
         {loading ? (
           <div className="loader-container">
             <div className="spinner"></div>
@@ -62,13 +67,18 @@ const UserList = () => {
               </tbody>
             </table>
 
-            <Pagination
-              page={page}
-              total={total}
-              limit={limit}
-              onPageChange={setPage}
-            />
+            <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
           </>
+        )}
+
+        {showModal && (
+          <RegisterModal
+            onClose={() => setShowModal(false)}
+            onSuccess={() => {
+              setShowModal(false);
+              loadUsers(); // refresh list
+            }}
+          />
         )}
       </div>
     </Layout>

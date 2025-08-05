@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // ✅ Added Link
+import { useNavigate, Link } from "react-router-dom";
 import "../../styles/Auth.css";
+import "../../styles/loader.css"; // ✅ Import loader styles
 import Input from "../../components/Input";
 
 const Login = () => {
@@ -13,12 +14,15 @@ const Login = () => {
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // success | error
+  const [isLoading, setIsLoading] = useState(false);  // ✅ New loader state
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // ✅ Start loading
+
     try {
       const res = await fetch("http://62.72.33.172:4000/api/auth/login-admin", {
         method: "POST",
@@ -31,7 +35,8 @@ const Login = () => {
       if (res.ok) {
         setMessage("✅ Login successful!");
         setMessageType("success");
-        localStorage.setItem("token", data.token); // store token
+        localStorage.setItem("token", data.token);
+
         setTimeout(() => {
           navigate("/dashboard/home");
         }, 1000);
@@ -42,6 +47,8 @@ const Login = () => {
     } catch (err) {
       setMessage("❌ Network error. Please try again.");
       setMessageType("error");
+    } finally {
+      setIsLoading(false); // ✅ Stop loading
     }
 
     setTimeout(() => {
@@ -52,34 +59,40 @@ const Login = () => {
 
   return (
     <div className="auth-container">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
+      {isLoading ? (
+        <div className="loader-container">
+          <div className="spinner" />
+          <p>Logging in...</p>
+        </div>
+      ) : (
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <h2>Login</h2>
 
-        {message && <div className={`form-message ${messageType}`}>{message}</div>}
+          {message && <div className={`form-message ${messageType}`}>{message}</div>}
 
-        <Input
-          label="Mobile"
-          name="mobile"
-          value={formData.mobile}
-          onChange={handleChange}
-        />
-        <Input
-          label="Password"
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+          <Input
+            label="Mobile"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+          />
+          <Input
+            label="Password"
+            name="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
-        <button type="submit" className="submit-btn">
-          Login
-        </button>
+          <button type="submit" className="submit-btn">
+            Login
+          </button>
 
-        {/* ✅ Register link */}
-        <p className="auth-link">
-          Don't have an account? <Link to="/register">Register</Link>
-        </p>
-      </form>
+          <p className="auth-link">
+            Don't have an account? <Link to="/register">Register</Link>
+          </p>
+        </form>
+      )}
     </div>
   );
 };

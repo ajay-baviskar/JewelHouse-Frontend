@@ -52,6 +52,8 @@ const UserList = () => {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Mobile</th>
+                  <th>Role</th>
+
                   <th>Created At</th>
                 </tr>
               </thead>
@@ -61,6 +63,8 @@ const UserList = () => {
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.mobile}</td>
+                    <td>{user.role}</td>
+
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}

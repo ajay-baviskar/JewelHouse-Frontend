@@ -92,6 +92,33 @@
   margin-left: 8px;
   vertical-align: middle;
 }
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-container input,
+.filter-container select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.filter-container button {
+  padding: 6px 12px;
+  background-color: #2ecc71;
+  border: none;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.filter-container button:last-child {
+  background-color: #0e4c35;
+}
+
 
 @keyframes spin {
   to {

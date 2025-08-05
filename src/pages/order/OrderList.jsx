@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { fetchOrders, updateOrderStatus } from "../../services/orderService";
 import "../../styles/order.css";
-import "../../styles/loader.css"; // Add this line to include the loader CSS
+import "../../styles/loader.css";
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -10,12 +10,21 @@ const OrderList = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
+
+  const [filters, setFilters] = useState({
+    name: "",
+    contactNumber: "",
+    pinCode: "",
+    email: "",
+    orderStatus: ""
+  });
+
   const limit = 10;
 
   const loadOrders = async () => {
     try {
       setIsLoading(true);
-      const res = await fetchOrders(page, limit);
+      const res = await fetchOrders(page, limit, filters);
       setOrders(res.data.data);
       setTotal(res.data.total);
     } catch (error) {
@@ -25,8 +34,23 @@ const OrderList = () => {
     }
   };
 
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const applyFilters = () => {
+    setPage(1); // Reset to page 1 on new filter
+    loadOrders();
+  };
+
+  const clearFilters = () => {
+    setFilters({ name: "", contactNumber: "", pinCode: "", email: "", orderStatus: "" });
+    setPage(1);
+    loadOrders();
+  };
+
   const handleStatusChange = async (orderId, newStatus) => {
-    const confirmChange = window.confirm(`Are you sure you want to change status to "${newStatus}"?`);
+    const confirmChange = window.confirm(`Change status to "${newStatus}"?`);
     if (!confirmChange) return;
 
     try {
@@ -52,6 +76,27 @@ const OrderList = () => {
       <div className="order-page">
         <h1 className="page-title">📦 Order List</h1>
 
+        {/* Filter Section */}
+        <div className="filter-container">
+          <input name="name" placeholder="Customer Name" value={filters.name} onChange={handleFilterChange} />
+          <input name="contactNumber" placeholder="Contact Number" value={filters.contactNumber} onChange={handleFilterChange} />
+          <input name="pinCode" placeholder="Pin Code" value={filters.pinCode} onChange={handleFilterChange} />
+          <input name="email" placeholder="Email" value={filters.email} onChange={handleFilterChange} />
+          <select name="orderStatus" value={filters.orderStatus} onChange={handleFilterChange}>
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+          </select>
+          <button type="submit" onClick={applyFilters} className="view-pdf-button">
+            🔍 Search
+          </button>
+          {/* <button onClick={applyFilters}>Apply</button>
+          <button onClick={clearFilters}>Clear</button> */}
+        </div>
+
+        {/* Loader */}
         {isLoading ? (
           <div className="loader-container">
             <div className="spinner" />
@@ -74,10 +119,10 @@ const OrderList = () => {
                 {orders.length ? (
                   orders.map((order) => (
                     <tr key={order._id}>
-                      <td>{order.customerDetails.name}</td>
+                      <td>{order.customerDetails?.name}</td>
                       <td>
-                        {order.customerDetails.address}<br />
-                        {order.customerDetails.pinCode}
+                        {order.customerDetails?.address}<br />
+                        {order.customerDetails?.pinCode}
                       </td>
                       <td>{new Date(order.orderDate).toLocaleDateString()}</td>
                       <td>{order.paymentStatus}</td>

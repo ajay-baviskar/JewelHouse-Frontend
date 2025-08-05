@@ -66,6 +66,9 @@ const Login = () => {
         </div>
       ) : (
         <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="logo-container">
+            <img src="http://62.72.33.172:4000/images/1753696116487-logo3.png" alt="Logo" className="auth-logo" />
+          </div>
           <h2>Login</h2>
 
           {message && <div className={`form-message ${messageType}`}>{message}</div>}

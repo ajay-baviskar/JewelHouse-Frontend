@@ -1,0 +1,158 @@
+/* gold.css */
+
+/* Page Layout */
+.gold-page {
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.gold-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.gold-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0e4c35;
+}
+
+/* Buttons */
+.add-gold-btn {
+  background-color: #0e4c35;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-gold-btn:hover {
+  background-color: #0c3a29;
+}
+
+.edit-btn {
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.edit-btn:hover {
+  background-color: #ec971f;
+}
+
+.delete-btn {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.delete-btn:hover {
+  background-color: #c9302c;
+}
+
+/* Table */
+.gold-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+
+}
+
+.gold-table th, .gold-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.gold-table th {
+  background-color: #0e4c35;
+  color: white;
+  font-weight: 600;
+}
+
+.gold-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Modal */
+.gold-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gold-modal-content {
+  background: white;
+  padding: 20px;
+  width: 400px;
+  border-radius: 6px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+}
+
+.gold-modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #0e4c35;
+}
+
+.gold-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.gold-form button {
+  background-color: #0e4c35;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.gold-form button:hover {
+  background-color: #0c3a29;
+}
+
+.gold-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}

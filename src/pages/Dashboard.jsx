@@ -17,6 +17,8 @@ const Dashboard = () => {
     { label: "Home", icon: "bi-house-door-fill", path: "/dashboard/home" },
     { label: "Users", icon: "bi-people-fill", path: "/dashboard/users" },
     { label: "Diamond", icon: "bi-gem", path: "/dashboard/diamonds" },
+        { label: "Gold Rates", icon: "bi-currency-dollar", path: "/dashboard/gold" },
+
     { label: "Quotations", icon: "bi-file-earmark-text-fill", path: "/dashboard/quotations" },
 
     { label: "Orders", icon: "bi-cart-fill", path: "/dashboard/orders" },

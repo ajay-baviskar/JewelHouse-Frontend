@@ -6,6 +6,8 @@ import DiamondList from "../pages/Diamond/DiamondList";
 import OrderList from "../pages/order/OrderList";
 import QuotationList from "../pages/QuotationsPage";
 import UserList from "../pages/UserList";
+import GoldList from "../pages/gold/GoldList";
+
 import ProtectedRoute from "../components/ProtectedRoute"; // ✅ Import
 
 const AppRoutes = () => {
@@ -57,6 +59,15 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+  path="/dashboard/gold"
+  element={
+    <ProtectedRoute>
+      <GoldList />
+    </ProtectedRoute>
+  }
+/>
       </Routes>
     </BrowserRouter>
   );

@@ -4,9 +4,10 @@ import DiamondFilter from "../../components/DiamondFilters";
 import DiamondTable from "../../components/DiamondTable";
 import Pagination from "../../components/Pagination";
 import { fetchDiamonds, updateDiamond } from "../../services/diamond";
+import CreateDiamondModal from "../../components/CreateDiamondModal"; // ⬅️ NEW IMPORT
 import "../../styles/diamond.css";
-import "../../styles/editModal.css"; // NEW CSS file
-import "../../styles/loader.css"; // Loader styles
+import "../../styles/editModal.css";
+import "../../styles/loader.css";
 
 const DiamondList = () => {
   const [filters, setFilters] = useState({});
@@ -15,10 +16,11 @@ const DiamondList = () => {
   const limit = 10;
   const [total, setTotal] = useState(0);
   const [editingDiamond, setEditingDiamond] = useState(null);
-  const [loading, setLoading] = useState(false); // Loader state
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false); // ⬅️ NEW STATE
 
   const loadDiamonds = async () => {
-    setLoading(true); // Start loader
+    setLoading(true);
     try {
       const res = await fetchDiamonds({ ...filters, page, limit });
       setDiamonds(res.data.data);
@@ -26,7 +28,7 @@ const DiamondList = () => {
     } catch (err) {
       console.error("Fetch error:", err);
     }
-    setLoading(false); // End loader
+    setLoading(false);
   };
 
   const handleEdit = (diamond) => {
@@ -36,11 +38,11 @@ const DiamondList = () => {
   const handleUpdate = async (updatedData) => {
     const confirm = window.confirm("Are you sure you want to update the diamond?");
     if (!confirm) return;
-    setLoading(true); // Start loader for update
+    setLoading(true);
     await updateDiamond(updatedData._id, updatedData);
     setEditingDiamond(null);
-    await loadDiamonds(); // Refresh list
-    setLoading(false); // End loader
+    await loadDiamonds();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -50,7 +52,13 @@ const DiamondList = () => {
   return (
     <Layout>
       <div className="diamond-page">
-        <h1 className="page-title">💎 Diamond List</h1>
+        <div className="page-header">
+          <h1 className="page-title">💎 Diamond List</h1>
+          <button className="register-btn" onClick={() => setShowModal(true)}>
+            + Create Diamond
+          </button>
+        </div>
+
         <DiamondFilter filters={filters} setFilters={setFilters} />
 
         {loading ? (
@@ -60,7 +68,12 @@ const DiamondList = () => {
         ) : (
           <>
             <DiamondTable diamonds={diamonds} onEdit={handleEdit} />
-            <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
+            <Pagination
+              page={page}
+              total={total}
+              limit={limit}
+              onPageChange={setPage}
+            />
           </>
         )}
 
@@ -71,13 +84,19 @@ const DiamondList = () => {
             onClose={() => setEditingDiamond(null)}
           />
         )}
+
+        {showModal && (
+          <CreateDiamondModal
+            onClose={() => setShowModal(false)}
+            onCreated={loadDiamonds}
+          />
+        )}
       </div>
     </Layout>
   );
 };
 
 export default DiamondList;
-
 // Modal Component
 const EditModal = ({ diamond, onUpdate, onClose }) => {
   const [formData, setFormData] = useState({ ...diamond });
@@ -124,3 +143,5 @@ const EditModal = ({ diamond, onUpdate, onClose }) => {
     </div>
   );
 };
+
+

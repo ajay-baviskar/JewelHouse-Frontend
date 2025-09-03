@@ -7,6 +7,8 @@ import { fetchUsers } from "../services/user";
 import "../styles/user.css";
 import "../styles/loader.css";
 import RegisterModal from "../components/RegisterModal";
+import EditUserModal from "../components/EditUserModal";      // ✅ NEW
+import ResetPasswordModal from "../components/ResetPasswordModal"; // ✅ NEW
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -15,6 +17,9 @@ const UserList = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const [editingUser, setEditingUser] = useState(null);
+  const [resetUser, setResetUser] = useState(null);
 
   const loadUsers = async () => {
     setLoading(true);
@@ -37,7 +42,9 @@ const UserList = () => {
       <div className="user-page">
         <div className="page-header">
           <h1 className="page-title">👥 User List</h1>
-          <button className="register-btn" onClick={() => setShowModal(true)}>+ Register User</button>
+          <button className="register-btn" onClick={() => setShowModal(true)}>
+            + Register User
+          </button>
         </div>
 
         {loading ? (
@@ -53,8 +60,8 @@ const UserList = () => {
                   <th>Email</th>
                   <th>Mobile</th>
                   <th>Role</th>
-
                   <th>Created At</th>
+                  <th>Actions</th> {/* ✅ NEW */}
                 </tr>
               </thead>
               <tbody>
@@ -64,14 +71,32 @@ const UserList = () => {
                     <td>{user.email}</td>
                     <td>{user.mobile}</td>
                     <td>{user.role}</td>
-
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      <button
+                        className="btn-update"
+                        onClick={() => setEditingUser(user)}
+                      >
+                        Edit
+                      </button>&nbsp;&nbsp;&nbsp;
+                      <button
+                        className="btn-reset"
+                        onClick={() => setResetUser(user)}
+                      >
+                        Reset Password
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
+            <Pagination
+              page={page}
+              total={total}
+              limit={limit}
+              onPageChange={setPage}
+            />
           </>
         )}
 
@@ -80,7 +105,29 @@ const UserList = () => {
             onClose={() => setShowModal(false)}
             onSuccess={() => {
               setShowModal(false);
-              loadUsers(); // refresh list
+              loadUsers();
+            }}
+          />
+        )}
+
+        {editingUser && (
+          <EditUserModal
+            user={editingUser}
+            onClose={() => setEditingUser(null)}
+            onSuccess={() => {
+              setEditingUser(null);
+              loadUsers();
+            }}
+          />
+        )}
+
+        {resetUser && (
+          <ResetPasswordModal
+            user={resetUser}
+            onClose={() => setResetUser(null)}
+            onSuccess={() => {
+              setResetUser(null);
+              loadUsers();
             }}
           />
         )}

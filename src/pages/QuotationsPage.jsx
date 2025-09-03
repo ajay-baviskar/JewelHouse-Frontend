@@ -121,7 +121,12 @@ const QuotationsPage = () => {
                     <td>{quotation.clientDetails.contactNumber}</td>
                     <td>{quotation.clientDetails.city}</td>
                     <td>{new Date(quotation.date).toLocaleDateString()}</td>
-                    <td>₹{quotation.quotationSummary.total}</td>
+<td>
+  ₹
+  {quotation?.quotationSummary?.total !== undefined
+    ? Math.ceil(quotation.quotationSummary.total).toLocaleString("en-IN")
+    : 0}
+</td>
                     <td>
                       <a
                         href={`${quotation.pdfUrl}`}

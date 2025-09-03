@@ -1,0 +1,94 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px; /* ✅ space between buttons */
+  margin-top: 15px;
+}
+
+.btn-update,
+.btn-cancel,
+.btn-reset {
+  border: none;
+  padding: 8px 16px; /* ✅ uniform size */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease-in-out;
+}
+
+/* Update Button */
+.btn-update {
+  background: #0e4c35;
+  color: #fff;
+}
+.btn-update:hover {
+  background: #0c3a29;
+}
+
+/* Cancel Button */
+.btn-cancel {
+  background: #ccc;
+  color: #333;
+}
+.btn-cancel:hover {
+  background: #aaa;
+  color: #fff;
+}
+
+/* Reset Button */
+.btn-reset {
+  background: #f59e0b;
+  color: #fff;
+}
+.btn-reset:hover {
+  background: #d97706;
+}
+.styled-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  appearance: none; /* removes default browser style */
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dropdown hover and focus */
+.styled-select:hover {
+  border-color: #0e4c35;
+}
+
+.styled-select:focus {
+  border-color: #0e4c35;
+  box-shadow: 0 0 0 2px rgba(14, 76, 53, 0.2);
+}
+
+/* Make options cleaner */
+.styled-select option {
+  padding: 10px;
+}

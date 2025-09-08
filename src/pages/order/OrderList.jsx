@@ -112,7 +112,9 @@ const OrderList = () => {
                   <th>Order Date</th>
                   <th>Payment</th>
                   <th>Status</th>
+                   <th>Created By</th>
                   <th>Change Status</th>
+
                 </tr>
               </thead>
               <tbody>
@@ -127,6 +129,8 @@ const OrderList = () => {
                       <td>{new Date(order.orderDate).toLocaleDateString()}</td>
                       <td>{order.paymentStatus}</td>
                       <td>{order.orderStatus}</td>
+                      <td>{order.userId.name}</td>
+
                       <td>
                         <select
                           className="status-select"
@@ -141,6 +145,7 @@ const OrderList = () => {
                         </select>
                         {statusUpdatingId === order._id && <span className="small-loader" />}
                       </td>
+
                     </tr>
                   ))
                 ) : (

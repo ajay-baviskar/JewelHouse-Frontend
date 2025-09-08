@@ -14,6 +14,7 @@ const QuotationList = ({ quotations }) => {
             <p><strong>City:</strong> {quotation.clientDetails.city}</p>
             <p><strong>Date:</strong> {new Date(quotation.date).toLocaleDateString()}</p>
             <p><strong>Total:</strong> ₹{quotation.quotationSummary.total}</p>
+            
           </div>
         </div>
       ))}

@@ -104,6 +104,7 @@ const QuotationsPage = () => {
                   <th>City</th>
                   <th>Date</th>
                   <th>Total (₹)</th>
+                  <th>Created By</th>
                   <th>PDF</th>
                 </tr>
               </thead>
@@ -127,6 +128,12 @@ const QuotationsPage = () => {
     ? Math.ceil(quotation.quotationSummary.total).toLocaleString("en-IN")
     : 0}
 </td>
+
+                    <td>{quotation.user.name}
+                      {/* {quotation.user.mobile} */}
+                    </td>
+
+
                     <td>
                       <a
                         href={`${quotation.pdfUrl}`}

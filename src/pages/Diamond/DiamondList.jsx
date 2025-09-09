@@ -3,11 +3,15 @@ import Layout from "../../components/Layout";
 import DiamondFilter from "../../components/DiamondFilters";
 import DiamondTable from "../../components/DiamondTable";
 import Pagination from "../../components/Pagination";
-import { fetchDiamonds, updateDiamond } from "../../services/diamond";
-import CreateDiamondModal from "../../components/CreateDiamondModal"; // ⬅️ NEW IMPORT
+import {
+  fetchDiamonds,
+  updateDiamond,
+} from "../../services/diamond";
+import CreateDiamondModal from "../../components/CreateDiamondModal";
 import "../../styles/diamond.css";
 import "../../styles/editModal.css";
 import "../../styles/loader.css";
+import axios from "axios";
 
 const DiamondList = () => {
   const [filters, setFilters] = useState({});
@@ -17,7 +21,11 @@ const DiamondList = () => {
   const [total, setTotal] = useState(0);
   const [editingDiamond, setEditingDiamond] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false); // ⬅️ NEW STATE
+  const [showModal, setShowModal] = useState(false);
+
+  // Separate loaders
+  const [exportLoading, setExportLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
 
   const loadDiamonds = async () => {
     setLoading(true);
@@ -45,6 +53,49 @@ const DiamondList = () => {
     setLoading(false);
   };
 
+  // ✅ Export handler
+  const handleExport = async () => {
+    try {
+      setExportLoading(true);
+      const res = await axios.get("http://62.72.33.172:4000/api/diamonds/download", {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "diamonds.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Export error:", err);
+      alert("Failed to export diamonds");
+    }
+    setExportLoading(false);
+  };
+
+  // ✅ Import handler
+  const handleImport = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setImportLoading(true);
+      await axios.post("http://62.72.33.172:4000/api/diamonds/import", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert("Import successful!");
+      await loadDiamonds();
+    } catch (err) {
+      console.error("Import error:", err);
+      alert("Failed to import diamonds");
+    }
+    setImportLoading(false);
+  };
+
   useEffect(() => {
     loadDiamonds();
   }, [filters, page]);
@@ -54,9 +105,34 @@ const DiamondList = () => {
       <div className="diamond-page">
         <div className="page-header">
           <h1 className="page-title">💎 Diamond List</h1>
-          <button className="register-btn" onClick={() => setShowModal(true)}>
-            + Create Diamond
-          </button>
+
+          <div className="button-group">
+            {/* Export button */}
+            <button
+              className="register-btn"
+              onClick={handleExport}
+              disabled={exportLoading}
+            >
+              {exportLoading ? "Exporting..." : "Export Excel"}
+            </button>
+
+            {/* Import button */}
+            <label className="register-btn">
+              {importLoading ? "Importing..." : "Import Excel"}
+              <input
+                type="file"
+                accept=".xlsx,.xls"
+                style={{ display: "none" }}
+                onChange={handleImport}
+                disabled={importLoading}
+              />
+            </label>
+
+            {/* Create button */}
+            <button className="register-btn create-btn" onClick={() => setShowModal(true)}>
+              + Create Diamond
+            </button>
+          </div>
         </div>
 
         <DiamondFilter filters={filters} setFilters={setFilters} />
@@ -97,6 +173,7 @@ const DiamondList = () => {
 };
 
 export default DiamondList;
+
 // Modal Component
 const EditModal = ({ diamond, onUpdate, onClose }) => {
   const [formData, setFormData] = useState({ ...diamond });
@@ -143,5 +220,3 @@ const EditModal = ({ diamond, onUpdate, onClose }) => {
     </div>
   );
 };
-
-

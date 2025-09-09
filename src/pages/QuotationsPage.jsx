@@ -1,14 +1,16 @@
+// QuotationsPage.js
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import Pagination from "../components/Pagination";
 import { getQuotations } from "../services/quotation";
 import "../styles/Quotation.css";
 import "../styles/loader.css";
+// import "../styles/Dropdown.css"; // new CSS for styled dropdown
 
 const QuotationsPage = () => {
   const [quotations, setQuotations] = useState([]);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10); // Default page size
+  const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
@@ -67,8 +69,7 @@ const QuotationsPage = () => {
 
   useEffect(() => {
     fetchQuotations();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]); // fetch whenever page changes
+  }, [page]);
 
   const totalPages = Math.ceil(total / limit);
 
@@ -112,15 +113,17 @@ const QuotationsPage = () => {
           </button>
         </form>
 
-        {/* Page Limit Selector */}
-        <div style={{ marginBottom: "10px" }}>
-          <label htmlFor="pageLimit">Items per page: </label>
-          <select id="pageLimit" value={limit} onChange={handleLimitChange}>
-            <option value={10}>10</option>
-            <option value={30}>30</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
+        {/* Styled Page Limit Selector */}
+        <div className="items-per-page">
+          <span>Items per page:</span>
+          <div className="custom-select">
+            <select value={limit} onChange={handleLimitChange}>
+              <option value={10}>10</option>
+              <option value={30}>30</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
         </div>
 
         {/* Loading Spinner */}

@@ -5,8 +5,6 @@ import { getQuotations } from "../services/quotation";
 import "../styles/Quotation.css";
 import "../styles/loader.css";
 
-// const BASE_URL = "http://62.72.33.172:4000/";
-
 const QuotationsPage = () => {
   const [quotations, setQuotations] = useState([]);
   const [page, setPage] = useState(1);
@@ -24,27 +22,46 @@ const QuotationsPage = () => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  const fetchQuotations = async () => {
+  const fetchQuotations = async (currentPage = page, currentFilters = filters) => {
     setLoading(true);
     try {
-      const res = await getQuotations(page, limit, filters);
-      setQuotations(res.data);
-      setTotal(res.total);
+      const res = await getQuotations(currentPage, limit, currentFilters);
+      setQuotations(res.data || []);
+      setTotal(res.total || 0);
     } catch (err) {
       console.error("Quotation fetch failed:", err);
     }
     setLoading(false);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    setPage(1); // Reset to first page on new search
-    fetchQuotations();
+    setPage(1); // Reset to first page
+    await fetchQuotations(1, filters);
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this quotation?");
+    if (!confirmDelete) return;
+
+    setLoading(true);
+    try {
+      await fetch(`http://62.72.33.172:4000/api/quotation/${id}`, {
+        method: "DELETE",
+      });
+      alert("Quotation deleted successfully!");
+      fetchQuotations(); // reload with current page and filters
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert("Failed to delete quotation");
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchQuotations();
-  }, [page]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]); // fetch whenever page changes
 
   const totalPages = Math.ceil(total / limit);
 
@@ -106,46 +123,62 @@ const QuotationsPage = () => {
                   <th>Total (₹)</th>
                   <th>Created By</th>
                   <th>PDF</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
-                {quotations.map((quotation) => (
-                  <tr key={quotation._id}>
-                    <td>
-                      <img
-                        src={`${quotation.image_url}`}
-                        alt="Quotation"
-                        className="quotation-thumbnail"
-                      />
-                    </td>
-                    <td>{quotation.clientDetails.name}</td>
-                    <td>{quotation.clientDetails.contactNumber}</td>
-                    <td>{quotation.clientDetails.city}</td>
-                    <td>{new Date(quotation.date).toLocaleDateString()}</td>
-<td>
-  ₹
-  {quotation?.quotationSummary?.total !== undefined
-    ? Math.ceil(quotation.quotationSummary.total).toLocaleString("en-IN")
-    : 0}
-</td>
-
-                    <td>{quotation.user.name}
-                      {/* {quotation.user.mobile} */}
-                    </td>
-
-
-                    <td>
-                      <a
-                        href={`${quotation.pdfUrl}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="view-pdf-button"
-                      >
-                        📄 View
-                      </a>
+                {quotations.length > 0 ? (
+                  quotations.map((quotation) => (
+                    <tr key={quotation._id}>
+                      <td>
+                        <img
+                          src={quotation.image_url || "/default-image.png"}
+                          alt="Quotation"
+                          className="quotation-thumbnail"
+                        />
+                      </td>
+                      <td>{quotation.clientDetails?.name || "-"}</td>
+                      <td>{quotation.clientDetails?.contactNumber || "-"}</td>
+                      <td>{quotation.clientDetails?.city || "-"}</td>
+                      <td>{quotation.date ? new Date(quotation.date).toLocaleDateString() : "-"}</td>
+                      <td>
+                        ₹
+                        {quotation?.quotationSummary?.total !== undefined
+                          ? Math.ceil(quotation.quotationSummary.total).toLocaleString("en-IN")
+                          : 0}
+                      </td>
+                      <td>{quotation.user?.name || "-"}</td>
+                      <td>
+                        {quotation.pdfUrl ? (
+                          <a
+                            href={quotation.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="view-pdf-button"
+                          >
+                            📄 View
+                          </a>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
+                      <td>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDelete(quotation._id)}
+                        >
+                          ❌ Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" style={{ textAlign: "center" }}>
+                      No quotations found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
 

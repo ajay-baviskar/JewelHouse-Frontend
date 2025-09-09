@@ -3,10 +3,12 @@ import Layout from "../../components/Layout";
 import { fetchOrders, updateOrderStatus } from "../../services/orderService";
 import "../../styles/order.css";
 import "../../styles/loader.css";
+// import "../../styles/Dropdown.css"; // Add this for styled dropdown
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10); // <-- Added state for items per page
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
@@ -19,12 +21,10 @@ const OrderList = () => {
     orderStatus: ""
   });
 
-  const limit = 10;
-
-  const loadOrders = async () => {
+  const loadOrders = async (currentPage = page, currentLimit = limit, currentFilters = filters) => {
     try {
       setIsLoading(true);
-      const res = await fetchOrders(page, limit, filters);
+      const res = await fetchOrders(currentPage, currentLimit, currentFilters);
       setOrders(res.data.data);
       setTotal(res.data.total);
     } catch (error) {
@@ -40,13 +40,14 @@ const OrderList = () => {
 
   const applyFilters = () => {
     setPage(1); // Reset to page 1 on new filter
-    loadOrders();
+    loadOrders(1, limit, filters);
   };
 
   const clearFilters = () => {
-    setFilters({ name: "", contactNumber: "", pinCode: "", email: "", orderStatus: "" });
+    const resetFilters = { name: "", contactNumber: "", pinCode: "", email: "", orderStatus: "" };
+    setFilters(resetFilters);
     setPage(1);
-    loadOrders();
+    loadOrders(1, limit, resetFilters);
   };
 
   const handleStatusChange = async (orderId, newStatus) => {
@@ -62,6 +63,13 @@ const OrderList = () => {
     } finally {
       setStatusUpdatingId(null);
     }
+  };
+
+  const handleLimitChange = (e) => {
+    const newLimit = parseInt(e.target.value);
+    setLimit(newLimit);
+    setPage(1);
+    loadOrders(1, newLimit, filters);
   };
 
   useEffect(() => {
@@ -89,11 +97,20 @@ const OrderList = () => {
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
           </select>
-          <button type="submit" onClick={applyFilters} className="view-pdf-button">
-            🔍 Search
-          </button>
-          {/* <button onClick={applyFilters}>Apply</button>
-          <button onClick={clearFilters}>Clear</button> */}
+          <button type="submit" onClick={applyFilters} className="view-pdf-button">🔍 Search</button>
+        </div>
+
+        {/* Items per page dropdown */}
+        <div className="items-per-page">
+          <span>Items per page:</span>
+          <div className="custom-select">
+            <select value={limit} onChange={handleLimitChange}>
+              <option value={10}>10</option>
+              <option value={30}>30</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
         </div>
 
         {/* Loader */}
@@ -112,9 +129,8 @@ const OrderList = () => {
                   <th>Order Date</th>
                   <th>Payment</th>
                   <th>Status</th>
-                   <th>Created By</th>
+                  <th>Created By</th>
                   <th>Change Status</th>
-
                 </tr>
               </thead>
               <tbody>
@@ -122,15 +138,11 @@ const OrderList = () => {
                   orders.map((order) => (
                     <tr key={order._id}>
                       <td>{order.customerDetails?.name}</td>
-                      <td>
-                        {order.customerDetails?.address}<br />
-                        {order.customerDetails?.pinCode}
-                      </td>
+                      <td>{order.customerDetails?.address}<br />{order.customerDetails?.pinCode}</td>
                       <td>{new Date(order.orderDate).toLocaleDateString()}</td>
                       <td>{order.paymentStatus}</td>
                       <td>{order.orderStatus}</td>
                       <td>{order.userId.name}</td>
-
                       <td>
                         <select
                           className="status-select"
@@ -145,12 +157,11 @@ const OrderList = () => {
                         </select>
                         {statusUpdatingId === order._id && <span className="small-loader" />}
                       </td>
-
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No Orders Found</td>
+                    <td colSpan="7">No Orders Found</td>
                   </tr>
                 )}
               </tbody>
@@ -158,6 +169,7 @@ const OrderList = () => {
           </div>
         )}
 
+        {/* Pagination */}
         {!isLoading && (
           <div className="pagination-controls">
             <button disabled={!hasPrev} onClick={() => setPage((prev) => prev - 1)}>Previous</button>

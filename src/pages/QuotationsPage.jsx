@@ -8,7 +8,7 @@ import "../styles/loader.css";
 const QuotationsPage = () => {
   const [quotations, setQuotations] = useState([]);
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit, setLimit] = useState(10); // Default page size
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
@@ -22,10 +22,10 @@ const QuotationsPage = () => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  const fetchQuotations = async (currentPage = page, currentFilters = filters) => {
+  const fetchQuotations = async (currentPage = page, currentLimit = limit, currentFilters = filters) => {
     setLoading(true);
     try {
-      const res = await getQuotations(currentPage, limit, currentFilters);
+      const res = await getQuotations(currentPage, currentLimit, currentFilters);
       setQuotations(res.data || []);
       setTotal(res.total || 0);
     } catch (err) {
@@ -36,8 +36,8 @@ const QuotationsPage = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setPage(1); // Reset to first page
-    await fetchQuotations(1, filters);
+    setPage(1);
+    await fetchQuotations(1, limit, filters);
   };
 
   const handleDelete = async (id) => {
@@ -50,12 +50,19 @@ const QuotationsPage = () => {
         method: "DELETE",
       });
       alert("Quotation deleted successfully!");
-      fetchQuotations(); // reload with current page and filters
+      fetchQuotations(); // reload current page
     } catch (err) {
       console.error("Delete failed:", err);
       alert("Failed to delete quotation");
     }
     setLoading(false);
+  };
+
+  const handleLimitChange = (e) => {
+    const newLimit = parseInt(e.target.value);
+    setLimit(newLimit);
+    setPage(1); // Reset to first page when limit changes
+    fetchQuotations(1, newLimit, filters);
   };
 
   useEffect(() => {
@@ -104,6 +111,17 @@ const QuotationsPage = () => {
             🔍 Search
           </button>
         </form>
+
+        {/* Page Limit Selector */}
+        <div style={{ marginBottom: "10px" }}>
+          <label htmlFor="pageLimit">Items per page: </label>
+          <select id="pageLimit" value={limit} onChange={handleLimitChange}>
+            <option value={10}>10</option>
+            <option value={30}>30</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
 
         {/* Loading Spinner */}
         {loading ? (

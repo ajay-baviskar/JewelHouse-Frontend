@@ -93,6 +93,8 @@ const OrderList = () => {
           <select name="orderStatus" value={filters.orderStatus} onChange={handleFilterChange}>
             <option value="">All Status</option>
             <option value="pending">Pending</option>
+            <option value="placed">Placed</option>
+
             <option value="confirmed">Confirmed</option>
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
@@ -127,7 +129,7 @@ const OrderList = () => {
                   <th>Customer</th>
                   <th>Address</th>
                   <th>Order Date</th>
-                  <th>Payment</th>
+                  {/* <th>Payment</th> */}
                   <th>Status</th>
                   <th>Created By</th>
                   <th>Change Status</th>
@@ -140,7 +142,7 @@ const OrderList = () => {
                       <td>{order.customerDetails?.name}</td>
                       <td>{order.customerDetails?.address}<br />{order.customerDetails?.pinCode}</td>
                       <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-                      <td>{order.paymentStatus}</td>
+                      {/* <td>{order.paymentStatus}</td> */}
                       <td>{order.orderStatus}</td>
                       <td>{order.userId.name}</td>
                       <td>
@@ -151,6 +153,7 @@ const OrderList = () => {
                           onChange={(e) => handleStatusChange(order._id, e.target.value)}
                         >
                           <option value="pending">Pending</option>
+                          <option value="placed">Placed</option>
                           <option value="confirmed">Confirmed</option>
                           <option value="shipped">Shipped</option>
                           <option value="delivered">Delivered</option>

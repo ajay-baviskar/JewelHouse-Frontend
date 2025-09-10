@@ -3,12 +3,11 @@ import Layout from "../../components/Layout";
 import { fetchOrders, updateOrderStatus } from "../../services/orderService";
 import "../../styles/order.css";
 import "../../styles/loader.css";
-// import "../../styles/Dropdown.css"; // Add this for styled dropdown
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10); // <-- Added state for items per page
+  const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
@@ -18,28 +17,32 @@ const OrderList = () => {
     contactNumber: "",
     pinCode: "",
     email: "",
-    orderStatus: ""
+    orderStatus: "",
   });
 
+  // fetch orders
   const loadOrders = async (currentPage = page, currentLimit = limit, currentFilters = filters) => {
     try {
       setIsLoading(true);
       const res = await fetchOrders(currentPage, currentLimit, currentFilters);
-      setOrders(res.data.data);
-      setTotal(res.data.total);
+      setOrders(res.data.data || []);
+      setTotal(res.data.total || 0);
     } catch (error) {
       console.error("Error fetching orders:", error);
+      setOrders([]);
+      setTotal(0);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // filters
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
   const applyFilters = () => {
-    setPage(1); // Reset to page 1 on new filter
+    setPage(1);
     loadOrders(1, limit, filters);
   };
 
@@ -50,14 +53,14 @@ const OrderList = () => {
     loadOrders(1, limit, resetFilters);
   };
 
+  // status change
   const handleStatusChange = async (orderId, newStatus) => {
-    const confirmChange = window.confirm(`Change status to "${newStatus}"?`);
-    if (!confirmChange) return;
+    if (!window.confirm(`Change status to "${newStatus}"?`)) return;
 
     try {
       setStatusUpdatingId(orderId);
       await updateOrderStatus(orderId, newStatus);
-      loadOrders();
+      loadOrders(page, limit, filters); // refresh current page
     } catch (error) {
       console.error("Error updating status:", error);
     } finally {
@@ -65,16 +68,17 @@ const OrderList = () => {
     }
   };
 
+  // items per page
   const handleLimitChange = (e) => {
-    const newLimit = parseInt(e.target.value);
+    const newLimit = parseInt(e.target.value, 10);
+    setPage(1); // reset to first page
     setLimit(newLimit);
-    setPage(1);
-    loadOrders(1, newLimit, filters);
   };
 
+  // fetch whenever page/limit/filters change
   useEffect(() => {
-    loadOrders();
-  }, [page]);
+    loadOrders(page, limit, filters);
+  }, [page, limit, filters]);
 
   const hasPrev = page > 1;
   const hasNext = page * limit < total;
@@ -94,12 +98,11 @@ const OrderList = () => {
             <option value="">All Status</option>
             <option value="pending">Pending</option>
             <option value="placed">Placed</option>
-
             <option value="confirmed">Confirmed</option>
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
           </select>
-          <button type="submit" onClick={applyFilters} className="view-pdf-button">🔍 Search</button>
+          <button onClick={applyFilters} className="view-pdf-button">🔍 Search</button>
         </div>
 
         {/* Items per page dropdown */}
@@ -129,7 +132,6 @@ const OrderList = () => {
                   <th>Customer</th>
                   <th>Address</th>
                   <th>Order Date</th>
-                  {/* <th>Payment</th> */}
                   <th>Status</th>
                   <th>Created By</th>
                   <th>Change Status</th>
@@ -142,9 +144,8 @@ const OrderList = () => {
                       <td>{order.customerDetails?.name}</td>
                       <td>{order.customerDetails?.address}<br />{order.customerDetails?.pinCode}</td>
                       <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-                      {/* <td>{order.paymentStatus}</td> */}
                       <td>{order.orderStatus}</td>
-                      <td>{order.userId.name}</td>
+                      <td>{order.userId?.name}</td>
                       <td>
                         <select
                           className="status-select"
@@ -164,7 +165,7 @@ const OrderList = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7">No Orders Found</td>
+                    <td colSpan="6">No Orders Found</td>
                   </tr>
                 )}
               </tbody>
@@ -173,10 +174,10 @@ const OrderList = () => {
         )}
 
         {/* Pagination */}
-        {!isLoading && (
+        {!isLoading && total > 0 && (
           <div className="pagination-controls">
             <button disabled={!hasPrev} onClick={() => setPage((prev) => prev - 1)}>Previous</button>
-            <span>Page {page}</span>
+            <span>Page {page} of {Math.ceil(total / limit)}</span>
             <button disabled={!hasNext} onClick={() => setPage((prev) => prev + 1)}>Next</button>
           </div>
         )}

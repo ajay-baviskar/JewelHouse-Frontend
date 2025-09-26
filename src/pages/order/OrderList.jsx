@@ -11,6 +11,7 @@ const OrderList = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
+  const [pdfLoadingId, setPdfLoadingId] = useState(null);
 
   const [filters, setFilters] = useState({
     name: "",
@@ -96,11 +97,11 @@ const OrderList = () => {
           <input name="email" placeholder="Email" value={filters.email} onChange={handleFilterChange} />
           <select name="orderStatus" value={filters.orderStatus} onChange={handleFilterChange}>
             <option value="">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="placed">Placed</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
+            <option value="pending">PENDING</option>
+            <option value="placed">PLACED</option>
+            <option value="confirmed">CONFIRMED</option>
+            <option value="shipped">SHPIPPED</option>
+            <option value="delivered">DELIVERED</option>
           </select>
           <button onClick={applyFilters} className="view-pdf-button">🔍 Search</button>
         </div>
@@ -135,14 +136,20 @@ const OrderList = () => {
                   <th>Status</th>
                   <th>Created By</th>
                   <th>Change Status</th>
+                  <th>View PDF</th> {/* Added */}
                 </tr>
               </thead>
+
               <tbody>
                 {orders.length ? (
                   orders.map((order) => (
                     <tr key={order._id}>
                       <td>{order.customerDetails?.name}</td>
-                      <td>{order.customerDetails?.address}<br />{order.customerDetails?.pinCode}</td>
+                      <td>
+                        {order.customerDetails?.address}
+                        <br />
+                        {order.customerDetails?.pinCode}
+                      </td>
                       <td>{new Date(order.orderDate).toLocaleDateString()}</td>
                       <td>{order.orderStatus}</td>
                       <td>{order.userId?.name}</td>
@@ -153,22 +160,56 @@ const OrderList = () => {
                           disabled={statusUpdatingId === order._id}
                           onChange={(e) => handleStatusChange(order._id, e.target.value)}
                         >
-                          <option value="pending">Pending</option>
-                          <option value="placed">Placed</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
+                          <option value="pending">PENDING</option>
+                          <option value="placed">PLACED</option>
+                          <option value="confirmed">CONFIRMED</option>
+                          <option value="shipped">SHPIPPED</option>
+                          <option value="delivered">DELIVERED</option>
                         </select>
                         {statusUpdatingId === order._id && <span className="small-loader" />}
                       </td>
+                      <td>
+                        <button
+                          className="view-pdf-button"
+                          disabled={pdfLoadingId === order._id}
+                          onClick={async () => {
+                            try {
+                              setPdfLoadingId(order._id); // start loader
+                              const res = await fetch(
+                                `http://62.72.33.172:4000/api/order/generate-pdf/${order._id}`
+                              );
+                              const data = await res.json();
+                              if (data.success && data.pdfUrl) {
+                                window.open(data.pdfUrl, "_blank");
+                              } else {
+                                alert("Failed to generate PDF. Please try again.");
+                              }
+                            } catch (error) {
+                              console.error("Error fetching PDF:", error);
+                              alert("Error while generating PDF.");
+                            } finally {
+                              setPdfLoadingId(null); // stop loader
+                            }
+                          }}
+                        >
+                          {pdfLoadingId === order._id ? (
+                            <span className="small-loader" />
+                          ) : (
+                            "📄 View PDF"
+                          )}
+                        </button>
+                      </td>
+
+
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No Orders Found</td>
+                    <td colSpan="7">No Orders Found</td>
                   </tr>
                 )}
               </tbody>
+
             </table>
           </div>
         )}

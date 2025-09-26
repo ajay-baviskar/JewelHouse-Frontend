@@ -169,28 +169,31 @@ const QuotationsPage = () => {
                           : 0}
                       </td>
                       <td>{quotation.user?.name || "-"}</td>
-                      <td>
-                        {quotation.pdfUrl ? (
-                          <a
-                            href={quotation.pdfUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="view-pdf-button"
-                          >
-                            📄 View
-                          </a>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                      <td>
-                        <button
-                          className="delete-btn"
-                          onClick={() => handleDelete(quotation._id)}
-                        >
-                          ❌ Delete
-                        </button>
-                      </td>
+                     <td>
+  {quotation.pdfUrl ? (
+    <a
+      href={quotation.pdfUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="view-pdf-button"
+      title="View PDF"
+    >
+      <i className="bi bi-eye"></i>
+    </a>
+  ) : (
+    "-"
+  )}
+</td>
+<td>
+  <button
+    className="delete-btn"
+    onClick={() => handleDelete(quotation._id)}
+    title="Delete"
+  >
+    <i className="bi bi-trash"></i>
+  </button>
+</td>
+
                     </tr>
                   ))
                 ) : (

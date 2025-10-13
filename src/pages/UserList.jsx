@@ -7,8 +7,8 @@ import { fetchUsers } from "../services/user";
 import "../styles/user.css";
 import "../styles/loader.css";
 import RegisterModal from "../components/RegisterModal";
-import EditUserModal from "../components/EditUserModal";      // ✅ NEW
-import ResetPasswordModal from "../components/ResetPasswordModal"; // ✅ NEW
+import EditUserModal from "../components/EditUserModal";
+import ResetPasswordModal from "../components/ResetPasswordModal";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -17,6 +17,7 @@ const UserList = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   const [editingUser, setEditingUser] = useState(null);
   const [resetUser, setResetUser] = useState(null);
@@ -36,6 +37,40 @@ const UserList = () => {
   useEffect(() => {
     loadUsers();
   }, [page]);
+
+const handleDeleteUser = async (userId) => {
+  if (!window.confirm("Are you sure you want to delete this user?")) return;
+
+  try {
+    // Optional: show full-page loader while all APIs reload
+    setLoading(true);
+    setDeletingId(userId);
+
+    const res = await fetch(`http://62.72.33.172:4000/api/auth/delete/${userId}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      alert("User deleted successfully!");
+
+      // 🔹 Reload all page APIs
+      await loadUsers(); // re-fetch users
+      // If you have other page-level APIs, call them here as well
+      // e.g., fetchRoles(), fetchStatistics(), etc.
+    } else {
+      alert(data.message || "Failed to delete user.");
+    }
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    alert("Error while deleting user.");
+  } finally {
+    setDeletingId(null);
+    setLoading(false);
+  }
+};
+
+
 
   return (
     <Layout>
@@ -61,7 +96,7 @@ const UserList = () => {
                   <th>Mobile</th>
                   <th>Role</th>
                   <th>Created At</th>
-                  <th>Actions</th> {/* ✅ NEW */}
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -78,12 +113,26 @@ const UserList = () => {
                         onClick={() => setEditingUser(user)}
                       >
                         Edit
-                      </button>&nbsp;&nbsp;&nbsp;
+                      </button>
+                      &nbsp;&nbsp;
                       <button
                         className="btn-reset"
                         onClick={() => setResetUser(user)}
                       >
                         Reset Password
+                      </button>
+                      &nbsp;&nbsp;
+                      <button
+                        className="btn-delete"
+                        disabled={deletingId === user._id}
+                        onClick={() => handleDeleteUser(user._id)}
+                        title="Delete User"
+                      >
+                        {deletingId === user._id ? (
+                          <span className="small-loader" />
+                        ) : (
+                          <i className="bi bi-trash"></i>
+                        )}
                       </button>
                     </td>
                   </tr>

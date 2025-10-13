@@ -12,6 +12,7 @@ const OrderList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [statusUpdatingId, setStatusUpdatingId] = useState(null);
   const [pdfLoadingId, setPdfLoadingId] = useState(null);
+const [deletingId, setDeletingId] = useState(null);
 
   const [filters, setFilters] = useState({
     name: "",
@@ -137,6 +138,8 @@ const OrderList = () => {
                   <th>Created By</th>
                   <th>Change Status</th>
                   <th>View PDF</th> {/* Added */}
+                                    <th>Delete Order</th> {/* Added */}
+
                 </tr>
               </thead>
 
@@ -195,10 +198,59 @@ const OrderList = () => {
                           {pdfLoadingId === order._id ? (
                             <span className="small-loader" />
                           ) : (
-                            "📄 View PDF"
+                            "📄"
                           )}
                         </button>
                       </td>
+
+                   <td>
+  <button
+    className="delete-btn"
+    disabled={deletingId === order._id || isLoading}
+    onClick={async () => {
+      if (!window.confirm("Are you sure you want to delete this order?")) return;
+
+      try {
+        setDeletingId(order._id); // start loader on button
+
+        const res = await fetch(
+          `http://62.72.33.172:4000/api/order/delete/${order._id}`,
+          { method: "DELETE" }
+        );
+        const data = await res.json();
+        console.log("Delete response:", data);
+
+        if (data.success) {
+          alert("Order deleted successfully!");
+
+          // ✅ Immediately remove order from local state
+          setOrders((prev) => prev.filter((o) => o._id !== order._id));
+
+          // ✅ Refresh from API to ensure sync with backend
+          setTimeout(() => {
+            loadOrders(page, limit, filters);
+          }, 500);
+        } else {
+          alert(data.message || "Failed to delete order.");
+        }
+      } catch (error) {
+        console.error("Error deleting order:", error);
+        alert("Error while deleting order.");
+      } finally {
+        setDeletingId(null); // stop loader on button
+      }
+    }}
+    title="Delete Order"
+  >
+    {deletingId === order._id ? (
+      <span className="small-loader" />
+    ) : (
+      <i className="bi bi-trash"></i>
+    )}
+  </button>
+</td>
+
+
 
 
                     </tr>

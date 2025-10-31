@@ -74,7 +74,7 @@ const Dashboard = () => {
             className="logout"
             onClick={() => {
               localStorage.removeItem("token");
-              window.location.href = "/login";
+              window.location.href = "/portal";
             }}
           >
             <i className="bi bi-box-arrow-right"></i>

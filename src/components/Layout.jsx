@@ -44,7 +44,7 @@ const navigate = useNavigate();
 
                     <li className="logout" onClick={() => {
                         localStorage.removeItem("token");
-                        window.location.href = "/login";
+                        window.location.href = "/portal";
                     }}>
                         <i className="bi bi-box-arrow-right"></i>
                         {!collapsed && <span className="text">Logout</span>}

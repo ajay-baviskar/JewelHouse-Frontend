@@ -48,7 +48,7 @@ const Register = () => {
         });
 
         setTimeout(() => {
-          navigate("/login");
+          navigate("/portal");
         }, 2000);
       } else {
         setMessage(data.message || "❌ Registration failed. Try again.");
@@ -101,7 +101,7 @@ const Register = () => {
 
           <p style={{ marginTop: "12px", textAlign: "center" }}>
             Already have an account?{" "}
-            <Link to="/login" style={{ color: "#007bff", textDecoration: "underline" }}>
+            <Link to="/portal" style={{ color: "#007bff", textDecoration: "underline" }}>
               Login here
             </Link>
           </p>

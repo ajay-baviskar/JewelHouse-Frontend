@@ -7,6 +7,6 @@ export const getQuotations = async (page, limit, filters = {}) => {
     ...filters,
   });
 
-  const response = await axios.get(`http://62.72.33.172:4000/api/quotation?${params}`);
+  const response = await axios.get(`http://62.72.33.172:4000/backend/api/quotation?${params}`);
   return response.data;
 };

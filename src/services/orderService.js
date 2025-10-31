@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://62.72.33.172:4000/api/order";
+const API_BASE = "http://62.72.33.172:4000/backend/api/order";
 
 export const fetchOrders = (page = 1, limit = 10, filters = {}) => {
   const params = new URLSearchParams({ page, limit });

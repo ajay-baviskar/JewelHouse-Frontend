@@ -53,7 +53,7 @@ const DiamondList = () => {
   const handleExport = async () => {
     try {
       setExportLoading(true);
-      const res = await axios.get("http://62.72.33.172:4000/api/diamonds/download", { responseType: "blob" });
+      const res = await axios.get("http://62.72.33.172:4000/backend/api/diamonds/download", { responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -76,7 +76,7 @@ const DiamondList = () => {
 
     try {
       setImportLoading(true);
-      await axios.post("http://62.72.33.172:4000/api/diamonds/import", formData, {
+      await axios.post("http://62.72.33.172:4000/backend/api/diamonds/import", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Import successful!");

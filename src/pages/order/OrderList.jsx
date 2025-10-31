@@ -179,7 +179,7 @@ const [deletingId, setDeletingId] = useState(null);
                             try {
                               setPdfLoadingId(order._id); // start loader
                               const res = await fetch(
-                                `http://62.72.33.172:4000/api/order/generate-pdf/${order._id}`
+                                `http://62.72.33.172:4000/backend/api/order/generate-pdf/${order._id}`
                               );
                               const data = await res.json();
                               if (data.success && data.pdfUrl) {
@@ -214,7 +214,7 @@ const [deletingId, setDeletingId] = useState(null);
         setDeletingId(order._id); // start loader on button
 
         const res = await fetch(
-          `http://62.72.33.172:4000/api/order/delete/${order._id}`,
+          `http://62.72.33.172:4000/backend/api/order/delete/${order._id}`,
           { method: "DELETE" }
         );
         const data = await res.json();

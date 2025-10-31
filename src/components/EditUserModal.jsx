@@ -29,7 +29,7 @@ const EditUserModal = ({ user, onClose, onSuccess }) => {
     const handleUpdate = async () => {
         try {
             await axios.put(
-                `http://62.72.33.172:4000/api/auth/users/${user._id}`,
+                `http://62.72.33.172:4000/backend/api/auth/users/${user._id}`,
                 formData
             );
             alert("✅ User updated successfully");

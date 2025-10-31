@@ -27,7 +27,7 @@ const Register = () => {
     setIsLoading(true); // ✅ Start loader
 
     try {
-      const res = await fetch("http://62.72.33.172:4000/api/auth/register", {
+      const res = await fetch("http://62.72.33.172:4000/backend/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -78,7 +78,7 @@ const Register = () => {
       ) : (
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="logo-container">
-            <img src="http://62.72.33.172:4000/images/1755179872326-Copy of Untitled Design-Photoroom (1).png" alt="Logo" className="auth-logo" />
+            <img src="http://62.72.33.172:4000/backend/images/1755179872326-Copy of Untitled Design-Photoroom (1).png" alt="Logo" className="auth-logo" />
           </div>
           <h2>Register</h2>
 

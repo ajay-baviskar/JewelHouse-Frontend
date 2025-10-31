@@ -20,7 +20,7 @@ const ResetPasswordModal = ({ user, onClose, onSuccess }) => {
     }
     try {
       await axios.put(
-        `http://62.72.33.172:4000/api/auth/users/${user._id}/password`,
+        `http://62.72.33.172:4000/backend/api/auth/users/${user._id}/password`,
         formData
       );
       alert("✅ Password reset successfully");

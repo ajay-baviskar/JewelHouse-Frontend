@@ -48,7 +48,7 @@ const QuotationsPage = () => {
 
     setLoading(true);
     try {
-      await fetch(`http://62.72.33.172:4000/backend/api/quotation/${id}`, {
+      await fetch(`https://thejewelhouse.com/backend/api/quotation/${id}`, {
         method: "DELETE",
       });
       alert("Quotation deleted successfully!");

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://62.72.33.172:4000/backend/api/gold"; // change {{localUrl}} if needed
+const API = "https://thejewelhouse.com/backend/api/gold"; // change {{localUrl}} if needed
 
 export const fetchGoldRates = () => {
   return axios.get(`${API}/get-all-get`);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://62.72.33.172:4000/backend/api/auth',
+  baseURL: 'https://thejewelhouse.com/backend/api/auth',
 });
 
 export const register = (data) => API.post('/register', data);

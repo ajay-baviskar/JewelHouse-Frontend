@@ -29,7 +29,7 @@ const Dashboard = () => {
     const fetchSummary = async () => {
       setLoading(true); // ⬅️ Show loader
       try {
-        const res = await fetch("http://62.72.33.172:4000/backend/api/order/summary");
+        const res = await fetch("https://thejewelhouse.com/backend/api/order/summary");
         const data = await res.json();
         if (data.status) {
           setSummary(data.data);

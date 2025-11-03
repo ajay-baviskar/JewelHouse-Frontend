@@ -46,7 +46,7 @@ const handleDeleteUser = async (userId) => {
     setLoading(true);
     setDeletingId(userId);
 
-    const res = await fetch(`http://62.72.33.172:4000/backend/api/auth/delete/${userId}`, {
+    const res = await fetch(`https://thejewelhouse.com/backend/api/auth/delete/${userId}`, {
       method: "DELETE",
     });
     const data = await res.json();

@@ -24,7 +24,7 @@ const Login = () => {
     setIsLoading(true); // ✅ Start loading
 
     try {
-      const res = await fetch("http://62.72.33.172:4000/backend/api/auth/login-admin", {
+      const res = await fetch("https://thejewelhouse.com/backend/api/auth/login-admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -67,7 +67,7 @@ const Login = () => {
       ) : (
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="logo-container">
-            <img src="http://62.72.33.172:4000/backend/images/1755179872326-Copy of Untitled Design-Photoroom (1).png" alt="Logo" className="auth-logo" />
+            <img src="https://thejewelhouse.com/backend/images/1755179872326-Copy of Untitled Design-Photoroom (1).png" alt="Logo" className="auth-logo" />
           </div>
           <h2>Login</h2>
 

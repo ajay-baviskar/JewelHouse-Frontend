@@ -6,6 +6,7 @@ const GoldTable = ({ goldRates, onEdit, onDelete }) => {
       <table className="gold-table">
         <thead>
           <tr>
+            <th>9K Rate</th>
             <th>24K Rate</th>
             <th>22K Rate</th>
             <th>18K Rate</th>
@@ -18,6 +19,7 @@ const GoldTable = ({ goldRates, onEdit, onDelete }) => {
           {goldRates.length > 0 ? (
             goldRates.map((gold) => (
               <tr key={gold._id}>
+                <td>{gold.rate9k}</td>
                 <td>{gold.rate24k}</td>
                 <td>{gold.rate22k}</td>
                 <td>{gold.rate18k}</td>

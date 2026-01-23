@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const GoldModal = ({ show, onClose, onSave, initialData }) => {
   const [formData, setFormData] = useState({
+    rate9k:"",
     rate24k: "",
     rate22k: "",
     rate18k: "",
@@ -31,6 +32,15 @@ const GoldModal = ({ show, onClose, onSave, initialData }) => {
     <div className="modal-overlay">
       <div className="modal">
         <h3>{initialData ? "Edit Gold Rate" : "Add Gold Rate"}</h3>
+         <div className="form-group">
+          <label>9K Rate</label>
+          <input
+            type="number"
+            name="rate9k"
+            value= "0"
+            onChange={handleChange}
+          />
+        </div>
         <div className="form-group">
           <label>24K Rate</label>
           <input

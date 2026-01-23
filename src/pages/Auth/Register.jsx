@@ -78,7 +78,7 @@ const Register = () => {
       ) : (
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="logo-container">
-            <img src="https://thejewelhouse.com/backend/images/1755179872326-Copy of Untitled Design-Photoroom (1).png" alt="Logo" className="auth-logo" />
+            <img src="http://62.72.33.172:4000/images/1755179872326-Copy of Untitled Design-Photoroom (1).png" alt="Logo" className="auth-logo" />
           </div>
           <h2>Register</h2>
 

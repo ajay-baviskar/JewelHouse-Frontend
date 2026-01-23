@@ -37,7 +37,7 @@ const GoldModal = ({ show, onClose, onSave, initialData }) => {
           <input
             type="number"
             name="rate9k"
-            value= "0"
+            value= {formData.rate9k}
             onChange={handleChange}
           />
         </div>

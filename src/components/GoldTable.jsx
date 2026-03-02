@@ -11,6 +11,9 @@ const GoldTable = ({ goldRates, onEdit, onDelete }) => {
             <th>22K Rate</th>
             <th>18K Rate</th>
             <th>14K Rate</th>
+             <th>999 Platinum Rate</th>
+             <th>925 Silver Rate</th>
+
             <th>Created At</th>
             <th>Actions</th>
           </tr>
@@ -24,6 +27,9 @@ const GoldTable = ({ goldRates, onEdit, onDelete }) => {
                 <td>{gold.rate22k}</td>
                 <td>{gold.rate18k}</td>
                 <td>{gold.rate14k}</td>
+                <td>{gold.rate999Platinum}</td>
+                <td>{gold.rate925Silver}</td>
+
                 <td>{new Date(gold.createdAt).toLocaleDateString()}</td>
                 <td>
                   <button

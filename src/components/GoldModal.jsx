@@ -7,6 +7,8 @@ const GoldModal = ({ show, onClose, onSave, initialData }) => {
     rate22k: "",
     rate18k: "",
     rate14k: "",
+    rate999Platinum: "",
+    rate925Silver:""
   });
 
   useEffect(() => {
@@ -77,6 +79,31 @@ const GoldModal = ({ show, onClose, onSave, initialData }) => {
             onChange={handleChange}
           />
         </div>
+
+
+           <div className="form-group">
+          <label>999 Platinum</label>
+          <input
+            type="number"
+            name="rate999Platinum"
+            value={formData.rate999Platinum}
+            onChange={handleChange}
+          />
+        </div>
+
+
+ <div className="form-group">
+          <label>925 Silver</label>
+          <input
+            type="number"
+            name="rate925Silver"
+            value={formData.rate925Silver}
+            onChange={handleChange}
+          />
+        </div>
+
+
+
         <div className="modal-actions">
           <button className="btn-cancel" onClick={onClose}>
             Cancel

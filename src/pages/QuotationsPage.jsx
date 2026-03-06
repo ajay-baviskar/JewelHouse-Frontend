@@ -1,18 +1,18 @@
-// QuotationsPage.js
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import Pagination from "../components/Pagination";
 import { getQuotations } from "../services/quotation";
 import "../styles/Quotation.css";
 import "../styles/loader.css";
-// import "../styles/Dropdown.css"; // new CSS for styled dropdown
 
 const QuotationsPage = () => {
+
   const [quotations, setQuotations] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+
   const [filters, setFilters] = useState({
     name: "",
     city: "",
@@ -20,19 +20,48 @@ const QuotationsPage = () => {
     email: "",
   });
 
+  // convert http image url to https
+  const getImageUrl = (url) => {
+    if (!url) return "/default-image.png";
+
+    return url.replace(
+      "http://62.72.33.172:4000",
+      "https://thejewelhouse.com"
+    );
+  };
+
   const handleInputChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  const fetchQuotations = async (currentPage = page, currentLimit = limit, currentFilters = filters) => {
+  const fetchQuotations = async (
+    currentPage = page,
+    currentLimit = limit,
+    currentFilters = filters
+  ) => {
+
     setLoading(true);
+
     try {
-      const res = await getQuotations(currentPage, currentLimit, currentFilters);
+
+      const res = await getQuotations(
+        currentPage,
+        currentLimit,
+        currentFilters
+      );
+
+      console.log("FULL API RESPONSE:", res);
+      console.log("QUOTATIONS DATA:", res.data);
+
       setQuotations(res.data || []);
       setTotal(res.total || 0);
+
     } catch (err) {
+
       console.error("Quotation fetch failed:", err);
+
     }
+
     setLoading(false);
   };
 
@@ -43,27 +72,43 @@ const QuotationsPage = () => {
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this quotation?");
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this quotation?"
+    );
+
     if (!confirmDelete) return;
 
     setLoading(true);
+
     try {
-      await fetch(`https://thejewelhouse.com/backend/api/quotation/${id}`, {
-        method: "DELETE",
-      });
+
+      await fetch(
+        `https://thejewelhouse.com/backend/api/quotation/${id}`,
+        { method: "DELETE" }
+      );
+
       alert("Quotation deleted successfully!");
-      fetchQuotations(); // reload current page
+
+      fetchQuotations();
+
     } catch (err) {
+
       console.error("Delete failed:", err);
       alert("Failed to delete quotation");
+
     }
+
     setLoading(false);
   };
 
   const handleLimitChange = (e) => {
+
     const newLimit = parseInt(e.target.value);
+
     setLimit(newLimit);
-    setPage(1); // Reset to first page when limit changes
+    setPage(1);
+
     fetchQuotations(1, newLimit, filters);
   };
 
@@ -74,12 +119,17 @@ const QuotationsPage = () => {
   const totalPages = Math.ceil(total / limit);
 
   return (
+
     <Layout>
+
       <div className="quotation-page">
+
         <h1 className="page-title">📄 Quotation List</h1>
 
-        {/* Filter Controls */}
+        {/* Filters */}
+
         <form onSubmit={handleSearch} style={{ marginBottom: "20px" }}>
+
           <input
             type="text"
             name="name"
@@ -87,6 +137,7 @@ const QuotationsPage = () => {
             value={filters.name}
             onChange={handleInputChange}
           />
+
           <input
             type="text"
             name="city"
@@ -94,6 +145,7 @@ const QuotationsPage = () => {
             value={filters.city}
             onChange={handleInputChange}
           />
+
           <input
             type="text"
             name="contactNumber"
@@ -101,6 +153,7 @@ const QuotationsPage = () => {
             value={filters.contactNumber}
             onChange={handleInputChange}
           />
+
           <input
             type="email"
             name="email"
@@ -108,33 +161,50 @@ const QuotationsPage = () => {
             value={filters.email}
             onChange={handleInputChange}
           />
+
           <button type="submit" className="view-pdf-button">
             🔍 Search
           </button>
+
         </form>
 
-        {/* Styled Page Limit Selector */}
+
+        {/* Limit Selector */}
+
         <div className="items-per-page">
+
           <span>Items per page:</span>
+
           <div className="custom-select">
+
             <select value={limit} onChange={handleLimitChange}>
               <option value={10}>10</option>
               <option value={30}>30</option>
               <option value={50}>50</option>
               <option value={100}>100</option>
             </select>
+
           </div>
+
         </div>
 
-        {/* Loading Spinner */}
+
+        {/* Loader */}
+
         {loading ? (
+
           <div className="loader-container">
             <div className="spinner"></div>
           </div>
+
         ) : (
+
           <>
+
             <table className="quotation-table">
+
               <thead>
+
                 <tr>
                   <th>Image</th>
                   <th>Client Name</th>
@@ -146,65 +216,117 @@ const QuotationsPage = () => {
                   <th>PDF</th>
                   <th>Delete</th>
                 </tr>
+
               </thead>
+
               <tbody>
+
                 {quotations.length > 0 ? (
+
                   quotations.map((quotation) => (
+
                     <tr key={quotation._id}>
+
+                      {/* IMAGE */}
+
                       <td>
+
                         <img
-                          src={quotation.image_url || "/default-image.png"}
+                          loading="lazy"
+                          src={getImageUrl(quotation.image_url)}
                           alt="Quotation"
                           className="quotation-thumbnail"
                         />
+
                       </td>
+
+
                       <td>{quotation.clientDetails?.name || "-"}</td>
+
                       <td>{quotation.clientDetails?.contactNumber || "-"}</td>
+
                       <td>{quotation.clientDetails?.city || "-"}</td>
-                      <td>{quotation.date ? new Date(quotation.date).toLocaleDateString() : "-"}</td>
+
                       <td>
-                        ₹
-                        {quotation?.quotationSummary?.total !== undefined
-                          ? Math.ceil(quotation.quotationSummary.total).toLocaleString("en-IN")
-                          : 0}
+                        {quotation.date
+                          ? new Date(
+                              quotation.date
+                            ).toLocaleDateString()
+                          : "-"}
                       </td>
+
+
+                      <td>
+
+                        ₹
+
+                        {quotation?.quotationSummary?.total !== undefined
+                          ? Math.ceil(
+                              quotation.quotationSummary.total
+                            ).toLocaleString("en-IN")
+                          : 0}
+
+                      </td>
+
+
                       <td>{quotation.user?.name || "-"}</td>
-                     <td>
-  {quotation.pdfUrl ? (
-    <a
-      href={quotation.pdfUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="view-pdf-button"
-      title="View PDF"
-    >
-      <i className="bi bi-eye"></i>
-    </a>
-  ) : (
-    "-"
-  )}
-</td>
-<td>
-  <button
-    className="delete-btn"
-    onClick={() => handleDelete(quotation._id)}
-    title="Delete"
-  >
-    <i className="bi bi-trash"></i>
-  </button>
-</td>
+
+
+                      {/* PDF */}
+
+                      <td>
+
+                        {quotation.pdfUrl ? (
+
+                          <a
+                            href={quotation.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="view-pdf-button"
+                          >
+                            👁
+                          </a>
+
+                        ) : (
+                          "-"
+                        )}
+
+                      </td>
+
+
+                      {/* DELETE */}
+
+                      <td>
+
+                        <button
+                          className="delete-btn"
+                          onClick={() =>
+                            handleDelete(quotation._id)
+                          }
+                        >
+                          🗑
+                        </button>
+
+                      </td>
 
                     </tr>
+
                   ))
+
                 ) : (
+
                   <tr>
                     <td colSpan="9" style={{ textAlign: "center" }}>
                       No quotations found.
                     </td>
                   </tr>
+
                 )}
+
               </tbody>
+
             </table>
+
 
             <Pagination
               page={page}
@@ -212,11 +334,17 @@ const QuotationsPage = () => {
               limit={limit}
               onPageChange={setPage}
             />
+
           </>
+
         )}
+
       </div>
+
     </Layout>
+
   );
+
 };
 
 export default QuotationsPage;
